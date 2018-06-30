@@ -23,7 +23,7 @@ class DateHelper {
 
         //let data2 = new Date(this._inputData.value.replace(/-/g, ','));
 
-        if(!/\d{4}-\d{2}-\d{2}/.test(data)) throw new Error('A data deve estar no formato yyyy-MM-dd');
+        if(!/\d{4}-\d{2}-\d{2}/.test(texto)) throw new Error('A data deve estar no formato yyyy-MM-dd');
 
         return new Date(
             ...
