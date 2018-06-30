@@ -1,16 +1,29 @@
 class NegociacaoController {
 
     constructor(){
-        //manter essa chamada no constructor eu
-        //faco com que o DOM seja acessado uma
-        //unica vez, que é no momento que a classe
-        //eh construido
         let $ = document.querySelector.bind(document);
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
-        this._listaNegociacoes = new ListaNegociacao();
+        this._listaNegociacoes = new ListaNegociacao(
+            //this - sera o parametro que carregara o
+            //contexto da origem da chamada, neste caso
+            //a classe NegociacaoController
+            //------
+            //estou passando uma funcao anonima para ser
+            //executada dentro da classe ListaNegociacao
+            //quando for chamada outras funcoes, e estou
+            //passando um objeto que sera referenciado 
+            //dentro da classe
+            //------            
+            this,
+            function(model){
+                this._negociacoesView.update(model);
+            }
+        );
         this._negociacoesView = new NegociacoesView($('#negociacoesView'));
+        this._negociacoesView.update(this._listaNegociacoes);
+
         this._mensagem = new Mensagem();
         this._mensagemView = new MensagemView($('#mensagemView'));
     }
@@ -19,7 +32,6 @@ class NegociacaoController {
         event.preventDefault();
 
         this._listaNegociacoes.adiciona(this._criarNegociacao());
-        this._negociacoesView.update(this._listaNegociacoes);
         
         this._mensagem.texto = 'Negociação adicionada com sucesso!';
         this._mensagemView.update(this._mensagem);
@@ -29,7 +41,6 @@ class NegociacaoController {
 
     apagar(){
         this._listaNegociacoes.esvaziar();
-        this._negociacoesView.update(this._listaNegociacoes);   
 
         this._mensagem.texto = 'Negociações apagadas com sucesso!';
         this._mensagemView.update(this._mensagem);
