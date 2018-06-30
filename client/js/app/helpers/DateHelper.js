@@ -1,6 +1,6 @@
 class DateHelper {
 
-    textoParaData(texto){
+    static textoParaData(texto){
 
         //usando arrow function
 /*         let data = new Date(
@@ -30,7 +30,7 @@ class DateHelper {
         );
     }
 
-    dataParaTexto(data){
+    static dataParaTexto(data){
         return data.getDate() + '/' + 
         (data.getMonth() + 1) + '/' + 
         data.getFullYear();
