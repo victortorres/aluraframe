@@ -18,6 +18,7 @@ class NegociacaoController {
         event.preventDefault();
 
         this._listaNegociacoes.adiciona(this._criarNegociacao());
+        this._negociacoesView.update(this._listaNegociacoes);
         this._limparFormulario();
     }
 
