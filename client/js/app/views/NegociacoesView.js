@@ -1,7 +1,7 @@
-class NegociacoesView{
+class NegociacoesView extends View {
 
     constructor(elemento){
-        this._elemento = elemento;
+        super(elemento);
     }
 
     _template(model){
@@ -42,13 +42,5 @@ class NegociacoesView{
         </table>        
         `;
     }
-
-    update(model){
-        //a funcao innerHTML converte uma string, que tenha
-        //tags HTML para elementos do DOM. porem as marcacoes
-        //devem estar correta
-        return this._elemento.innerHTML = this._template(model);
-    }
-
 
 }
