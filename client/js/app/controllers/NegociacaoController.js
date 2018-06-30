@@ -6,20 +6,12 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
         this._listaNegociacoes = new ListaNegociacao(
-            //this - sera o parametro que carregara o
-            //contexto da origem da chamada, neste caso
-            //a classe NegociacaoController
-            //------
             //estou passando uma funcao anonima para ser
             //executada dentro da classe ListaNegociacao
             //quando for chamada outras funcoes, e estou
             //passando um objeto que sera referenciado 
             //dentro da classe
-            //------            
-            this,
-            function(model){
-                this._negociacoesView.update(model);
-            }
+            model => this._negociacoesView.update(model)
         );
         this._negociacoesView = new NegociacoesView($('#negociacoesView'));
         this._negociacoesView.update(this._listaNegociacoes);
