@@ -1,5 +1,11 @@
 class DateHelper {
 
+    //caso nao declare um construtor na classe, o construtor
+    //padrao existira, que eh um construtor sem parametros
+    constructor(){
+        throw new Error('DateHelper não pode ser instanciada.');
+    }
+
     static textoParaData(texto){
 
         //usando arrow function
