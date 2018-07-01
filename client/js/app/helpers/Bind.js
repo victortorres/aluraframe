@@ -2,7 +2,7 @@ class Bind {
 
     //classe responsavel em linkar a alteracao do modelo
     //com a alteracao na tela
-    constructor(model, view, props){
+    constructor(model, view, ...props){
         let proxy = ProxyFactory.create(
             model,
             props,
