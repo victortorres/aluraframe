@@ -46,7 +46,7 @@ class NegociacaoService{
 
     obterNegociacaoDaSemanaAnterior(){
         
-        return new Promisse((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
             let xhr = new XMLHttpRequest();
     
@@ -72,7 +72,7 @@ class NegociacaoService{
     }
 
     obterNegociacaoDaSemanaRetrasada(){
-        return new Promisse((resolve, reject) => {
+        return new Promise((resolve, reject) => {
 
             let xhr = new XMLHttpRequest();
     
