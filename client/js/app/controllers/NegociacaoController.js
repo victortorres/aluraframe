@@ -8,10 +8,15 @@ class NegociacaoController {
         
         //vinculo o escopo do objeto local
         let self = this;
+        //argumento 1 -> passamos o objeto alvo
+        //argumento 2 -> passamos um handler(funcao), que seria
+        //um interceptor para processar algo antes de um metodo
+        //executar a sua operacao padrao
         this._listaNegociacoes = new Proxy(new ListaNegociacao(), {
-            //target-> objeto que o proxy esta embrulhando
-            //prop-> 
-            //receiver-> 
+            //target-> objeto que o proxy esta embrulhando, neste
+            //caso o modelo
+            //prop-> eh a propriedade que esta sendo lida
+            //receiver-> eh uma referencia ao proprio proxy
             get(target, prop, receiver){
                 if(['adiciona', 'esvaziar'].includes(prop) &&
                     typeof(target[prop]) == typeof(Function)){
