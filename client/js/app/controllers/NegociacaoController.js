@@ -51,6 +51,26 @@ class NegociacaoController {
             negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
             this._mensagem.texto = 'Lista de negociações adicionada com sucesso.';
         });
+
+        negociacaoService.obterNegociacaoDaSemanaAnterior((err, negociacoes) => {
+            if (err){
+                this._mensagem.texto = err;
+                return;
+            }
+
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Lista de negociações adicionada com sucesso.';
+        });
+        
+        negociacaoService.obterNegociacaoDaSemanaRetrasada((err, negociacoes) => {
+            if (err){
+                this._mensagem.texto = err;
+                return;
+            }
+
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Lista de negociações adicionada com sucesso.';
+        });        
     }
 
     _criarNegociacao(){
