@@ -5,14 +5,27 @@ class NegociacaoController {
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
-        this._listaNegociacoes = new ListaNegociacao(
-            //estou passando uma funcao anonima para ser
-            //executada dentro da classe ListaNegociacao
-            //quando for chamada outras funcoes, e estou
-            //passando um objeto que sera referenciado 
-            //dentro da classe
-            model => this._negociacoesView.update(model)
-        );
+        
+        //vinculo o escopo do objeto local
+        let self = this;
+        this._listaNegociacoes = new Proxy(new ListaNegociacao(), {
+            //target-> objeto que o proxy esta embrulhando
+            //prop-> 
+            //receiver-> 
+            get(target, prop, receiver){
+                if(['adiciona', 'esvaziar'].includes(prop) &&
+                    typeof(target[prop]) == typeof(Function)){
+                    
+                    return function(){
+                        self._negociacoesView.update(target)
+                        Reflect.apply(target[prop], target, arguments);
+                    }
+
+                }
+                return Reflect.get(target, prop, receiver);
+            }
+        });
+        
         this._negociacoesView = new NegociacoesView($('#negociacoesView'));
         this._negociacoesView.update(this._listaNegociacoes);
 
