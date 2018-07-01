@@ -42,35 +42,27 @@ class NegociacaoController {
     importarNegociacoes(){
         let negociacaoService = new NegociacaoService();
 
-        negociacaoService.obterNegociacaoDaSemana((err, negociacoes) => {
-            if (err){
-                this._mensagem.texto = err;
-                return;
-            }
-
+        negociacaoService.obterNegociacaoDaSemana()
+        .then(negociacoes => {
             negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Lista de negociações adicionada com sucesso.';
-        });
-
-        negociacaoService.obterNegociacaoDaSemanaAnterior((err, negociacoes) => {
-            if (err){
-                this._mensagem.texto = err;
-                return;
-            }
-
-            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Lista de negociações adicionada com sucesso.';
-        });
+            this._mensagem.texto = 'Negociações da semana carregadas com sucesso.';
+        })
+        .catch(erro => this._mensagem.texto = erro);
         
-        negociacaoService.obterNegociacaoDaSemanaRetrasada((err, negociacoes) => {
-            if (err){
-                this._mensagem.texto = err;
-                return;
-            }
-
+        negociacaoService.obterNegociacaoDaSemanaAnterior()
+        .then(negociacoes => {
             negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-            this._mensagem.texto = 'Lista de negociações adicionada com sucesso.';
-        });        
+            this._mensagem.texto = 'Negociações da semana anterior carregadas com sucesso.';
+        })
+        .catch(erro => this._mensagem.texto = erro);
+        
+        negociacaoService.obterNegociacaoDaSemanaRetrasada()
+        .then(negociacoes => {
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Negociações da semana retrasada carregadas com sucesso.';
+        })
+        .catch(erro => this._mensagem.texto = erro);
+
     }
 
     _criarNegociacao(){
