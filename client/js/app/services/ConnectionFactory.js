@@ -3,14 +3,15 @@
 //no caso foi a classe ConnectionFactory
 var ConnectionFactory = (function (){
 
-    var stores = ['negociacoes'];
-    var versao = 1;
-    var dbName = 'aluraframe';
+    const stores = ['negociacoes'];
+    const versao = 1;
+    const dbName = 'aluraframe';
     
     //esse objeto sera responsavel para guardar o objeto da conexao com
     //o indexedDB, e foi criada fora da classe pois tenho como requisito
     //ter apenas uma conexao para a aplicacao, seria um singleton
     var connection = null;
+    var close = null;
     
     return class ConnectionFactory{
     
@@ -36,6 +37,13 @@ var ConnectionFactory = (function (){
                 openRequest.onsuccess = e => {
                     if (!connection){
                         connection = e.target.result;
+                        //aplicacao de tecnica monkey patching para
+                        //sobrescrever a funcionalidade padrao do close
+                        //connection para que a mesma nao seja fechada
+                        close = connection.close.bind(connection);
+                        connection.close = function() {
+                            throw new Error('A conexão não pode ser fechada diretamente.');
+                        }
                     }
                     resolve(connection);
                 };
@@ -62,6 +70,13 @@ var ConnectionFactory = (function (){
                 //as chaves
                 connection.createObjectStore(store, {autoIncrement: true});
             });
+        }
+
+        static closeConnection(){
+            if(connection){
+                close();
+                connection = null;
+            }
         }
     }
 })();
