@@ -1,41 +1,67 @@
-var stores = ['negociacoes'];
-var versao = 1;
-var dbName = 'aluraframe';
+//apliquei o module pattern, fazendo isso eu escondo todas as variaveis
+//declaradas fora da classe e deixo visivel somente o que der return, onde
+//no caso foi a classe ConnectionFactory
+var ConnectionFactory = (function (){
 
-class ConnectionFactory{
-
-    constructor(){
-        throw Error('Não é possível criar instancias de ConnectionFactory');
-    }
-
-    static getConnection(){
-        return new Promise((resolve, reject) => {
-            let openRequest = window.indexedDB.open(dbName, versao);
-
-            openRequest.onupgradeneeded = e => {
-                ConnectionFactory._createStores(e.target.result);
-            };
-            
-            openRequest.onsuccess = e => {
-                resolve(e.target.result);
-            };
-            
-            openRequest.onerror = e => {
-                console.log(e.target.error);
-
-                reject(e.target.error.name);
-            };
-            
-        });
-    }
+    var stores = ['negociacoes'];
+    var versao = 1;
+    var dbName = 'aluraframe';
     
-    static _createStores(connection){
-        stores.forEach(store => {
-            if (connection.objectStoreNames.contains(store)){
-                connection.deleteObjectStore(store);
-            }
+    //esse objeto sera responsavel para guardar o objeto da conexao com
+    //o indexedDB, e foi criada fora da classe pois tenho como requisito
+    //ter apenas uma conexao para a aplicacao, seria um singleton
+    var connection = null;
     
-            connection.createObjectStore(store, {autoIncrement: true});
-        });
+    return class ConnectionFactory{
+    
+        constructor(){
+            throw Error('Não é possível criar instancias de ConnectionFactory');
+        }
+    
+        static getConnection(){
+            return new Promise((resolve, reject) => {
+                //faco uma requisicao para abrir uma conexao com o
+                //indexedDB
+                let openRequest = window.indexedDB.open(dbName, versao);
+    
+                //caso esteja criando o banco pela primeira vez
+                //ou alterando um banco ja criado
+                openRequest.onupgradeneeded = e => {
+                    //o parametro enviado indica a conexao realizada
+                    ConnectionFactory._createStores(e.target.result);
+                };
+                
+                //toda vez que a conexao for aberta com sucesso
+                //pode ser a primeira ou todas as outras
+                openRequest.onsuccess = e => {
+                    if (!connection){
+                        connection = e.target.result;
+                    }
+                    resolve(connection);
+                };
+                
+                //toda vez que ocorrer um erro
+                openRequest.onerror = e => {
+                    console.log(e.target.error);
+    
+                    reject(e.target.error.name);
+                };
+                
+            });
+        }
+        
+        static _createStores(connection){
+            stores.forEach(store => {
+                //verifica se o banco "store" ja esta criado
+                if (connection.objectStoreNames.contains(store)){
+                    //se sim remove
+                    connection.deleteObjectStore(store);
+                }
+                
+                //cria um novo banco e habilita o auto incremento para
+                //as chaves
+                connection.createObjectStore(store, {autoIncrement: true});
+            });
+        }
     }
-}
+})();
