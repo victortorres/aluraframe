@@ -40,6 +40,8 @@ var ConnectionFactory = (function (){
                         //aplicacao de tecnica monkey patching para
                         //sobrescrever a funcionalidade padrao do close
                         //connection para que a mesma nao seja fechada
+                        //- sempre usar uma funcao simples, pois o escopo
+                        //de this deve ser variado
                         close = connection.close.bind(connection);
                         connection.close = function() {
                             throw new Error('A conexão não pode ser fechada diretamente.');
