@@ -27,7 +27,13 @@ class NegociacaoController {
                 negociacoes.forEach(negociacao => 
                     this._listaNegociacoes.adiciona(negociacao)))
             .catch(erro => this._mensagem.texto = erro);
-        
+     
+        //este metodo eh uma especie de scheduler para poder executar
+        //alfuma operacao de tempos em tempos, e o tempo eh setado
+        //em milisegundos
+        setInterval(() => {
+            this.importarNegociacoes();
+        }, 3000);
     }
     
     adicionar(event){
