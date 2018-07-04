@@ -85,17 +85,28 @@ class NegociacaoController {
              negociacaoService.obterNegociacaoDaSemanaAnterior(),
              negociacaoService.obterNegociacaoDaSemanaRetrasada()]
         )
+        //os retornos do array de promises gera um array de retornos,
+        //e neste caso cada promisse retorno um array, entao devo tratar
+        //os arrays internos primeiro, para gerar um array simples, essa
+        //operacao eh chamada de flating, pois estao achatando o array de
+        //arrays em um unico array, e entao depois eh soh processar os itens
+        //do array no que precisar
+        .then(negociacoes => 
+                negociacoes.reduce((arrayAchatado, array) => 
+                    arrayAchatado.concat(array), []))
+        //adicionado tratamento para nao deixar duplicar
+        //os dados que ja foram importados
+        .then(negociacoes => 
+            negociacoes.filter(negociacao => 
+                !this._listaNegociacoes.negociacoes.some(negociacaoExistente => 
+                    //o comando JSON.stringify eh usando para poder serializar
+                    //o objeto para facilitar a comparacao, pois diferente do java, nao
+                    //existe uma forma de comparar objetos, como o .equals
+                    JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente))))
         //retorno com sucesso
         .then(negociacoes => {
-            //os retornos do array de promises gera um array de retornos,
-            //e neste caso cada promisse retorno um array, entao devo tratar
-            //os arrays internos primeiro, para gerar um array simples, essa
-            //operacao eh chamada de flating, pois estao achatando o array de
-            //arrays em um unico array, e entao depois eh soh processar os itens
-            //do array no que precisar
-            negociacoes
-            .reduce((arrayAchatado, array) => arrayAchatado.concat(array), [])
-            .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            negociacoes.forEach(negociacao => 
+                this._listaNegociacoes.adiciona(negociacao));
             this._mensagem.texto = 'Negociações da semana carregadas com sucesso.';
         })
         //retorno com erro
