@@ -1,6 +1,8 @@
 class NegociacaoController {
 
     constructor(){
+        //serve para mapear o documento, ou seja, a pagina html
+        //para poder acessar os valores
         let $ = document.querySelector.bind(document);
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
@@ -19,6 +21,10 @@ class NegociacaoController {
             'texto'
         );
 
+        this._init();
+    }
+    
+    _init(){
         ConnectionFactory
             .getConnection()
             .then(connection => new NegociacaoDao(connection))
@@ -35,7 +41,7 @@ class NegociacaoController {
             this.importarNegociacoes();
         }, 3000);
     }
-    
+
     adicionar(event){
         event.preventDefault();
 
