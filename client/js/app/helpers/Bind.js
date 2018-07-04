@@ -21,3 +21,4 @@ function Bind(model, view) {
 
     return proxy;
 };
+//# sourceMappingURL=Bind.js.map

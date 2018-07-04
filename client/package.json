@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel js/app-es6 -d js/app"
+    "build": "babel js/app-es6 -d js/app --source-maps"
   },
   "author": "",
   "license": "ISC",
