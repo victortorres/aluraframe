@@ -25,6 +25,7 @@ class NegociacaoController {
     }
     
     _init(){
+        //aplicar o mesmo refactoring para adicionar
         ConnectionFactory
             .getConnection()
             .then(connection => new NegociacaoDao(connection))
@@ -45,31 +46,22 @@ class NegociacaoController {
     adicionar(event){
         event.preventDefault();
 
-        ConnectionFactory
-            .getConnection()
-            .then(connection => {
-                
-                let negociacao = this._criarNegociacao();
+        let negociacao = this._criarNegociacao();
 
-                new NegociacaoDao(connection)
-                    .adiciona(negociacao)
-                    .then( () => {
-                        
-                        this._listaNegociacoes.adiciona(negociacao);
-                        this._mensagem.texto = 'Negociação adicionada com sucesso!';
-                        this._limparFormulario();
-
-                    })
-                    .catch(erro => this._mensagem.texto = erro);
-
+        new NegociacaoService()
+            .adicionar(negociacao)
+            .then(mensagem => {
+                this._listaNegociacoes.adiciona(negociacao);
+                this._mensagem.texto = mensagem;
+                this._limparFormulario();
             })
-            .catch();
-        
+            .catch(mensagem => this._mensagem.texto = mensagem);
 
     }
 
     apagar(){
 
+        //aplicar o mesmo refactoring para adicionar
         ConnectionFactory
             .getConnection()
             .then(connection => new NegociacaoDao(connection))

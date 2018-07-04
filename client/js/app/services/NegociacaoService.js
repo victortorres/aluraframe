@@ -59,5 +59,15 @@ class NegociacaoService{
                     reject('Não foi possível carregar as negociações da semana retrasada.');
                 });
         });        
-    }    
+    }
+    
+    adicionar(negociacao){
+        return new Promise((resolve, reject) => {
+            ConnectionFactory.getConnection()
+                .then(connection => new NegociacaoDao(connection))
+                .then(dao => dao.adiciona(negociacao))
+                .then( () => resolve('Negociação adicionada com sucesso!'))
+                .catch(erro => reject(erro));
+        });
+    }
 }
